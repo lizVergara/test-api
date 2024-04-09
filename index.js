@@ -6,31 +6,21 @@ const cors = require("cors")
 
 
 
-//aqui conecta a la base
 conexion();
 
-
-//creacion de servidor node 
 const app = express();
 const puerto = '3900'
 
 
-//configurar cors
 app.use(cors());
 
-// convertir body a objeto js
-app.use(express.json()); //recibir datos json 
-app.use(express.urlencoded({ extended: true })) //fprm-url-encode
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
-//crear rutas
 app.use("/api", routes)
 
 
-
-
-
 app.get("/", (req, res) => {
-    //ruta para comprobar que se crea la api
     console.log("Test")
 
     return (
@@ -40,7 +30,6 @@ app.get("/", (req, res) => {
 });
 
 
-//crear servidor y escuchar peticiones
 app.listen(puerto, () => {
     console.log('server run in port: ' + puerto)
 })

@@ -12,11 +12,8 @@ const searchUser = async (req, res) => {
         }).sort({ point: 1 });
 
         if (userFind.length === 0) {
-
             create(req, res)
         }
-
-        // Si se encontraron resultados, los devolvemos
         return res.status(200).json({
             status: "success",
             Users: userFind
@@ -30,13 +27,9 @@ const searchUser = async (req, res) => {
 }
 
 const create = async (req, res) => {
-    console.log("createee")
     let params = req.body;
-
     try {
         const user = new User(params);
-        console.log(user)
-
         const userCreate = await user.save();
 
         return res.status(200).json({
@@ -53,13 +46,12 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
     try {
-        let users = await User.find({}).sort({ point: -1 }); //ordena de ultimo ingreso al primero
-        console.log(users);
+        let users = await User.find({}).sort({ point: -1 });
 
         if (!users || users.length === 0) {
             return res.status(404).json({
                 status: "error",
-                mensaje: "have not been found "
+                mensaje: "have not been found"
             });
         }
         return res.status(200).json({
@@ -75,10 +67,39 @@ const getAll = async (req, res) => {
     }
 };
 
+
+const update = async (req, res) => {
+    try {
+        let body = req.body;
+        let id = body._id;
+
+        let user = await User.findByIdAndUpdate({ _id: id }, body, { new: true }).exec();
+        if (!user || user.length === 0) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: "Could not update article"
+            });
+        }
+        return res.status(200).json({
+            status: "success",
+            mensaje: "Updated user",
+            users: user
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            mensaje: "Error Updated user",
+            error: error.message
+        });
+    }
+
+}
+
 module.exports = {
     searchUser,
     create,
-    getAll
+    getAll,
+    update
 };
 
 
